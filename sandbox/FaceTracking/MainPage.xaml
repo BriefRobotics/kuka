@@ -1,0 +1,13 @@
+﻿<Page
+    x:Class="FaceTracking.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:FaceTracking"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <CaptureElement Name="Display"  Margin="0,0,0,0" Width="Auto" Stretch="Fill" />
+        <Canvas Name="Canvas" Margin="0,0,0,0" Width="Auto" />
+    </Grid>
+</Page>
