@@ -26,7 +26,8 @@ namespace SkypeLauncher
 
             // automate via keystrokes (answer calls, etc.)
             // https://msdn.microsoft.com/en-us/library/system.windows.forms.sendkeys(v=vs.110).aspx
-            SendKeys.SendWait("%{enter}"); // full screen
+            SendKeys.SendWait("^{q}"); // call (ctrl-q, last contact)
+            SendKeys.SendWait("%{enter}"); // full screen (alt-enter)
         }
     }
 }
