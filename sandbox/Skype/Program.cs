@@ -3,7 +3,7 @@ using System.Windows.Forms; // just for SendKeys
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace Skype
+namespace SkypeLauncher
 {
     class Program
     {
@@ -26,7 +26,7 @@ namespace Skype
 
             // automate via keystrokes (answer calls, etc.)
             // https://msdn.microsoft.com/en-us/library/system.windows.forms.sendkeys(v=vs.110).aspx
-            SendKeys.SendWait("^h"); // Skype Home
+            SendKeys.SendWait("%{enter}"); // full screen
         }
     }
 }

@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{433C1799-806A-4ADB-A591-466C91851B45}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Windows</RootNamespace>
-    <AssemblyName>Windows</AssemblyName>
+    <RootNamespace>SkypeLauncher</RootNamespace>
+    <AssemblyName>SkypeLauncher</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
