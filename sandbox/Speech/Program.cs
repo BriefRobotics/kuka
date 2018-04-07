@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Speech.Recognition;
+
+using System.IO;
+using System.Net;
+using System.Net.Sockets;
 
 namespace Speech
 {
@@ -63,6 +63,32 @@ namespace Speech
                     }
                 }
             };
+
+            // --------------------------------------------------------------------------------
+
+            var udp = new UdpClient();
+            udp.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+            udp.Client.Bind(new IPEndPoint(IPAddress.Any, 7777));
+            var remote = new IPEndPoint(IPAddress.Any, 0);
+            var lastFace = DateTime.MaxValue;
+            while (true)
+            {
+                var data = udp.Receive(ref remote);
+                var reader = new BinaryReader(new MemoryStream(data));
+                var count = reader.ReadInt32();
+                var seeFace = count > 0 ? "yes" : "no";
+                Console.WriteLine($"Face: {seeFace} (last={lastFace})");
+                if (count > 0 && DateTime.Now - lastFace > TimeSpan.FromSeconds(1))
+                {
+                    speech.Say("Peekaboo!");
+                }
+                if (count == 1)
+                {
+                    lastFace = DateTime.Now;
+                }
+            }
+
+            // --------------------------------------------------------------------------------
 
             Console.WriteLine("Hello! I await your command...");
             speech.Say("Hello! I await your command...");
