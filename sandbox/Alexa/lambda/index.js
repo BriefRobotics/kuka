@@ -8,8 +8,7 @@ Kuka.prototype = Object.create(AlexaSkill.prototype);
 Kuka.prototype.constructor = Kuka;
 
 Kuka.prototype.eventHandlers.onSessionStarted = function (sessionStartedRequest, session) {
-    console.log("Psi onSessionStarted requestId: " + sessionStartedRequest.requestId
-        + ", sessionId: " + session.sessionId);
+    console.log("Kuka onSessionStarted requestId: " + sessionStartedRequest.requestId + ", sessionId: " + session.sessionId);
 };
 
 Kuka.prototype.eventHandlers.onLaunch = function (launchRequest, session, response) {
@@ -26,9 +25,9 @@ var QUEUE_URL = 'https://sqs.us-east-1.amazonaws.com/660181231855/KukaBot';
 var sqs = new AWS.SQS({region : 'us-east-1'});
 
 Kuka.prototype.intentHandlers = {
-    "come_here": function (intent, session, response) {
+    "come_here": function (event, context, response) {
         try {
-            var params = { MessageBody: JSON.stringify({ intent: intent, session: session, response: response }), QueueUrl: QUEUE_URL };
+            var params = { MessageBody: JSON.stringify({ event: event, context: context, response: response }), QueueUrl: QUEUE_URL };
             sqs.sendMessage(params, function(err, data){
                 if(err) {
                     response.tellWithCard("Exception: " + JSON.stringify(err), "Greeter", "Nothing");
@@ -40,9 +39,9 @@ Kuka.prototype.intentHandlers = {
             response.tellWithCard("Exception: " + JSON.stringify(ex), "Greeter", "Nothing");
         }
     },
-    "goto": function (intent, session, response) {
+    "goto": function (event, context, response) {
         try {
-            var params = { MessageBody: JSON.stringify(intent), QueueUrl: QUEUE_URL };
+            var params = { MessageBody: JSON.stringify({ event: event, context: context, response: response }), QueueUrl: QUEUE_URL };
             sqs.sendMessage(params, function(err, data){
                 if(err) {
                     response.tellWithCard("Exception: " + JSON.stringify(err), "Greeter", "Nothing");

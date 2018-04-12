@@ -1,9 +1,6 @@
 ﻿using System;
 using Amazon;
 using Amazon.SQS;
-using Amazon.SQS.Internal;
-using Amazon.SQS.Model;
-using Amazon.SQS.Util;
 
 namespace Alexa
 {

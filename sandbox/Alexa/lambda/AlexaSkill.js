@@ -15,7 +15,7 @@ AlexaSkill.prototype.requestHandlers = {
     },
 
     IntentRequest: function (event, context, response) {
-        this.eventHandlers.onIntent.call(this, event.request, event.session, response);
+        this.eventHandlers.onIntent.call(this, event, context, response);
     },
 
     SessionEndedRequest: function (event, context) {
@@ -31,15 +31,14 @@ AlexaSkill.prototype.eventHandlers = {
         throw "onLaunch should be overriden by subclass";
     },
 
-    onIntent: function (intentRequest, session, response) {
-        var intent = intentRequest.intent,
-            intentName = intentRequest.intent.name,
-            intentHandler = this.intentHandlers[intentName];
+    onIntent: function (event, context, response) {
+        var name = event.request.intent.name;
+        var intentHandler = this.intentHandlers[name];
         if (intentHandler) {
-            console.log('dispatch intent = ' + intentName);
-            intentHandler.call(this, intent, session, response);
+            console.log('dispatch intent = ' + name);
+            intentHandler.call(this, event, context, response);
         } else {
-            throw 'Unsupported intent = ' + intentName;
+            throw 'Unsupported intent = ' + name;
         }
     },
 
@@ -111,8 +110,8 @@ Response.prototype = (function () {
             };
         }
         var returnResult = {
-                version: '1.0',
-                response: alexaResponse
+            version: '1.0',
+            response: alexaResponse
         };
         if (options.session && options.session.attributes) {
             returnResult.sessionAttributes = options.session.attributes;
