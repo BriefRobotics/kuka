@@ -9,7 +9,7 @@ namespace Faces
 {
     class Program
     {
-        const string KEY = "<key goes here>";
+        const string KEY = "05e23a6b8a494ac3ba2a3d49053ccf48";
         const string ENDPOINT = "https://westcentralus.api.cognitive.microsoft.com";
 
         static async Task DeletePersonGroup(string id)
@@ -70,8 +70,8 @@ namespace Faces
         {
             Console.WriteLine("Face Enrollment Tool");
 
-            var personGroupId = "test";
-            var personGroupName = "testGroup";
+            var personGroupId = "Kuka";
+            var personGroupName = "KukaGroup";
 
             RepopulatePersonGroup(personGroupId, personGroupName);
             Console.WriteLine("Waiting");
