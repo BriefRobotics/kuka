@@ -77,7 +77,18 @@ namespace Speech
                 var reader = new BinaryReader(new MemoryStream(data));
                 var count = reader.ReadInt32();
                 var seeFace = count > 0 ? "yes" : "no";
-                Console.WriteLine($"Face: {seeFace} (last={lastFace})");
+                if (count > 0)
+                {
+                    var x = reader.ReadInt32();
+                    var y = reader.ReadInt32();
+                    var w = reader.ReadInt32();
+                    var h = reader.ReadInt32();
+                    Console.WriteLine($"Face: {seeFace} (x={x} y={y} w={w} h={h} last={lastFace})");
+                }
+                else
+                {
+                    Console.WriteLine($"Face: {seeFace} (last={lastFace})");
+                }
                 if (count > 0 && DateTime.Now - lastFace > TimeSpan.FromSeconds(1))
                 {
                     speech.Say("Peekaboo!");

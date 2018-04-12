@@ -49,7 +49,7 @@ namespace Speech
         public void Say(string say)
         {
             reco.RecognizeAsyncStop(); // poor man's echo cancelation
-            synth.Speak(say);
+            synth.SpeakAsync(say);
             reco.RecognizeAsync(RecognizeMode.Multiple);
         }
     }
