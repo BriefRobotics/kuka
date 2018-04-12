@@ -1,0 +1,102 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "kukabot",
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "come_here",
+                    "slots": [],
+                    "samples": [
+                        "Come to me",
+                        "Please come here",
+                        "Come over here"
+                    ]
+                },
+                {
+                    "name": "goto",
+                    "slots": [
+                        {
+                            "name": "location",
+                            "type": "location",
+                            "samples": [
+                                "Booth",
+                                "The booth",
+                                "Greg"
+                            ]
+                        }
+                    ],
+                    "samples": [
+                        "Go back to {location}"
+                    ]
+                }
+            ],
+            "types": [
+                {
+                    "name": "location",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "greg",
+                                "synonyms": [
+                                    "greg's desk"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "booth",
+                                "synonyms": [
+                                    "our booth",
+                                    "the booth"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "dialog": {
+            "intents": [
+                {
+                    "name": "goto",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "location",
+                            "type": "location",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.1102475210643.779929961783"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "prompts": [
+            {
+                "id": "Elicit.Slot.1102475210643.779929961783",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "What location?"
+                    }
+                ]
+            }
+        ]
+    }
+}
