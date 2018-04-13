@@ -17,8 +17,11 @@ namespace Faces
         const string KEY = "05e23a6b8a494ac3ba2a3d49053ccf48";
         const string ENDPOINT = "https://westcentralus.api.cognitive.microsoft.com";
 
+        private static int THROTTLE = 3000;
+
         private static HttpClient GetClient()
         {
+            Thread.Sleep(THROTTLE); // throttle
             var client = new HttpClient();
             client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", KEY);
             return client;
@@ -26,6 +29,7 @@ namespace Faces
 
         private static async Task<string> SendData(byte[] data, string type, string uri, Func<string, HttpContent, Task<HttpResponseMessage>> sendFn)
         {
+            Thread.Sleep(THROTTLE); // throttle
             using (var content = new ByteArrayContent(data))
             {
                 content.Headers.ContentType = new MediaTypeHeaderValue(type);
@@ -55,6 +59,7 @@ namespace Faces
 
         static async Task DeletePersonGroup(string groupId)
         {
+            Thread.Sleep(THROTTLE); // throttle
             var client = GetClient();
             var response = await client.DeleteAsync($"{ENDPOINT}/face/v1.0/persongroups/{groupId}");
             if (response.ReasonPhrase == "Not Found") return; // this is fine
@@ -85,6 +90,7 @@ namespace Faces
 
         static async Task<bool> TrainingInProgress(string groupId)
         {
+            Thread.Sleep(THROTTLE); // throttle
             var response = await GetClient().GetAsync($"{ENDPOINT}/face/v1.0/persongroups/{groupId}/training");
             var result = await response.Content.ReadAsStringAsync();
             var status = JObject.Parse(result)["status"].ToString();
@@ -139,8 +145,8 @@ namespace Faces
                         {
                             if (ex.Message.Contains("RateLimitExceeded"))
                             {
-                                Console.WriteLine("    RATE LIMIT EXCEEDED (throttling 10 seconds)");
-                                Thread.Sleep(10000); // throttle (rate limit)
+                                Console.WriteLine("    RATE LIMIT EXCEEDED (throttling 20 seconds)");
+                                Thread.Sleep(THROTTLE * 7); // throttle (rate limit)
                             }
                             else
                             {
@@ -156,14 +162,26 @@ namespace Faces
             // train face reco
             await Train(groupId);
             Console.WriteLine("Training...");
-            while (await TrainingInProgress(groupId))
+            while (true)
             {
-                Console.WriteLine("Still training...");
-                Thread.Sleep(10000);
+                try
+                {
+                    while (await TrainingInProgress(groupId))
+                    {
+                        Console.WriteLine("Still training...");
+                        Thread.Sleep(10000);
+                    }
+                    break;
+                }
+                catch
+                {
+                    Console.WriteLine("RATE LIMIT EXCEEDED (throttling 10 seconds)");
+                }
             }
         }
         static async Task TestFaceReco(string groupId, string peoplePath)
         {
+            THROTTLE = 0; // disable throttling
             var people = JObject.Parse(File.ReadAllText($"{peoplePath}/../people/people.json"));
             foreach (var p in Directory.GetFiles(peoplePath))
             {
@@ -191,8 +209,8 @@ namespace Faces
                     {
                         if (ex.Message.Contains("RateLimitExceeded"))
                         {
-                            Console.WriteLine("    RATE LIMIT EXCEEDED (throttling 10 seconds)");
-                            Thread.Sleep(10000); // throttle (rate limit)
+                            Console.WriteLine("    RATE LIMIT EXCEEDED (throttling 20 seconds)");
+                            Thread.Sleep(THROTTLE * 7); // throttle (rate limit)
                         }
                         else
                         {
@@ -205,15 +223,15 @@ namespace Faces
 
         static async void Process(string personGroupId, string personGroupName)
         {
-            // await RepopulatePersonGroup(personGroupId, personGroupName, "../../../people");
+            await RepopulatePersonGroup(personGroupId, personGroupName, "../../../people");
             await TestFaceReco(personGroupId, "../../../test");
+            Console.WriteLine("DONE!");
         }
 
         static void Main(string[] args)
         {
             Console.WriteLine("Face Enrollment Tool");
             Process("kuka", "KukaGroup");
-            Console.WriteLine("Waiting");
             Console.ReadLine();
         }
     }
