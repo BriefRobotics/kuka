@@ -7,9 +7,12 @@ This is a classic .NET app (for speech reco/synth) hosting a Brief language engi
 Type `words` at the REPL for a complete list, but here are some important i-do words:
 
 * *Speech*
-	* `say` - Speak given string
-	* `phrase` - Add phrase to speech recognition grammar; bind to Brief expression (`phrase 'hello [say "hi there"])
-	* `reco` - Start speech recognition, after having added `phrase` bindings (`reco`)
+    * `say` - Speak given string
+    * `phrase` - Add phrase to speech recognition grammar; bind to Brief expression (`phrase 'hello [say "hi there"])
+    * `reco` - Start speech recognition, after having added `phrase` bindings (`reco`)
+* *Windows*
+    * `window` - Show window in foreground by process name (`window 'skype)
+    * `key` - Send key to forground app (`key '^{q})
 
 ## Brief Language
 

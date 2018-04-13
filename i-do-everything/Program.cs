@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using I.Do.Brief;
     using I.Do.Speech;
+    using I.Do.Windows;
 
     class Program
     {
@@ -18,6 +19,8 @@
             machine.Context.AddWord("say", "Speak given string", c => { speech.Say(c.Pop()); return c; });
             machine.Context.AddWord("phrase", "Add phrase to speech recognition grammar; bind to Brief expression (`phrase 'hello [say \"hi there\"])", c => { speechCommands.Add(c.Pop(), c.Pop()); return c; });
             machine.Context.AddWord("reco", "Start speech recognition, after having added `phrase` bindings (`reco`)", c => { speech.SetGrammar(Speech.Choices(speechCommands.Select(kv => Speech.Phrase(kv.Key, Brief.Print(kv.Value.Reverse()))).ToArray())); return c; });
+            machine.Context.AddWord("window", "Show window in foreground by process name (`window 'skype)", c => { Windows.ShowWindow(c.Pop()); return c; });
+            machine.Context.AddWord("key", "Send key to forground app (`key '^{q})", c => { Windows.SendKey(c.Pop()); return c; });
         }
 
         public static void Main(string[] args)
