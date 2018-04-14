@@ -13,13 +13,13 @@ namespace I.Do.Windows
         [DllImport("user32.dll")]
         private static extern bool SetForegroundWindow(IntPtr WindowHandle);
 
-        public static void ShowWindow(string procName)
+        public static void ShowWindow(string procName, bool maximized)
         {
             // maximize Skype app
             foreach (var proc in Process.GetProcessesByName(procName))
             {
                 var hWnd = proc.MainWindowHandle;
-                ShowWindow(new HandleRef(null, hWnd), 3 /* SW_MAXIMIZE */);
+                ShowWindow(new HandleRef(null, hWnd), maximized ? 3 /* SW_MAXIMIZE */ : 1 /* SW_SHOWNORMAL */);
                 SetForegroundWindow(hWnd);
                 break; // assume first
             }

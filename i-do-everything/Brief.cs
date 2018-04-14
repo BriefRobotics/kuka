@@ -376,7 +376,7 @@
             {
                 foreach (var line in ((string[])File.ReadAllLines(path)))
                 {
-                    this.Execute(line);
+                    if (line.Length > 0 && !line.StartsWith("\\ ")) this.Execute(line);
                 }
             });
             this.Context.AddWord00("words", "Lists words available in the current dictionary", () =>
@@ -421,9 +421,14 @@
             return context;
         }
 
+        private object protect = new object();
+
         public void Execute(string source)
         {
-            this.Context = this.Execute(Brief.Parse(source, this.Context.Dictionary), this.Context);
+            lock (protect)
+            {
+                this.Context = this.Execute(Brief.Parse(source, this.Context.Dictionary), this.Context);
+            }
         }
 
         public static void ReadEvalPrintLoop(string name, Machine machine)
