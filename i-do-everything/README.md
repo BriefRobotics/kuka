@@ -11,8 +11,10 @@ Type `words` at the REPL for a complete list, but here are some important i-do w
     * `phrase` - Add phrase to speech recognition grammar; bind to Brief expression (`phrase 'hello [say "hi there"])
     * `reco` - Start speech recognition, after having added `phrase` bindings (`reco`)
 * *Windows*
-	* `window` - Show window in foreground by process name; optionally maximized (`window "Skype" true)
+    * `window` - Show window in foreground by process name; optionally maximized (`window "Skype" true)
     * `key` - Send key to forground app (`key '^{q})
+* *Miscellaneous*
+    * `config` - Set configuration value (`config 'port 80`)
 
 ## Brief Language
 

@@ -376,7 +376,7 @@
             {
                 foreach (var line in ((string[])File.ReadAllLines(path)))
                 {
-                    if (line.Length > 0 && !line.StartsWith("\\ ")) this.Execute(line);
+                    if (line.Length > 0 && !line.StartsWith("// ")) this.Execute(line);
                 }
             });
             this.Context.AddWord00("words", "Lists words available in the current dictionary", () =>
