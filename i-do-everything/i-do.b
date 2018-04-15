@@ -1,7 +1,9 @@
 ﻿// phrase "hi" [say "Howdy"]
 // phrase "howdy" [say "Hi"]
 // phrase "notepad" [window "Notepad" true]
-// reco
+// speechreco
+
+faces-watch "c:/test" true
 
 def "skype" [window "Skype"]
 def "ctrl-q" [key '^{q}]

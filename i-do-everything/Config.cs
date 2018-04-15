@@ -9,21 +9,12 @@ namespace I.Do.Everything
 
         public string this[string key]
         {
-            get { return store[key.ToLower()]; }
+            get
+            {
+                var k = $"{Environment.MachineName}.{key}".ToLower();
+                return store.ContainsKey(k) ? store[k] : store[key.ToLower()]; // fall back to non-machine-specific as necessary
+            }
             set { store.Add(key.ToLower(), value); }
-        }
-
-        public string MachineSpecific(string key)
-        {
-            var k = $"{Environment.MachineName}.{key}".ToLower();
-            if (store.ContainsKey(k))
-            {
-                return store[k];
-            }
-            else
-            {
-                return this[key]; // fall back to non-machine-specific
-            }
         }
     }
 }

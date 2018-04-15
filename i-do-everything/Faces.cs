@@ -10,24 +10,33 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Faces
+namespace I.Do.Faces
 {
-    class Program
+    public class Faces
     {
-        const string KEY = "05e23a6b8a494ac3ba2a3d49053ccf48";
-        const string ENDPOINT = "https://westcentralus.api.cognitive.microsoft.com";
+        public readonly string key;
+        public readonly string endpoint;
+        public readonly string peopleDirectory; // faces and test images
+        public readonly double confidenceThreshold;
+        public static int THROTTLE = 3000;
 
-        private static int THROTTLE = 3000;
+        public Faces(string key, string endpoint, string peopleDirectory, double confidenceThreshold)
+        {
+            this.key = key;
+            this.endpoint = endpoint;
+            this.peopleDirectory = peopleDirectory;
+            this.confidenceThreshold = confidenceThreshold;
+        }
 
-        private static HttpClient GetClient()
+        private HttpClient GetClient()
         {
             Thread.Sleep(THROTTLE); // throttle
             var client = new HttpClient();
-            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", KEY);
+            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", key);
             return client;
         }
 
-        private static async Task<string> SendData(byte[] data, string type, string uri, Func<string, HttpContent, Task<HttpResponseMessage>> sendFn)
+        private async Task<string> SendData(byte[] data, string type, string uri, Func<string, HttpContent, Task<HttpResponseMessage>> sendFn)
         {
             Thread.Sleep(THROTTLE); // throttle
             using (var content = new ByteArrayContent(data))
@@ -47,74 +56,74 @@ namespace Faces
             }
         }
 
-        private static async Task<string> SendJson(string json, string uri, Func<string, HttpContent, Task<HttpResponseMessage>> sendFn)
+        private async Task<string> SendJson(string json, string uri, Func<string, HttpContent, Task<HttpResponseMessage>> sendFn)
         {
             return await SendData(Encoding.UTF8.GetBytes(json), "application/json", uri, sendFn);
         }
 
-        private static async Task<string> PostJson(string json, string uri)
+        private async Task<string> PostJson(string json, string uri)
         {
             return await SendJson(json, uri, GetClient().PostAsync);
         }
 
-        static async Task DeletePersonGroup(string groupId)
+        private async Task DeletePersonGroup(string groupId)
         {
             Thread.Sleep(THROTTLE); // throttle
             var client = GetClient();
-            var response = await client.DeleteAsync($"{ENDPOINT}/face/v1.0/persongroups/{groupId}");
+            var response = await client.DeleteAsync($"{endpoint}/face/v1.0/persongroups/{groupId}");
             if (response.ReasonPhrase == "Not Found") return; // this is fine
             response.EnsureSuccessStatusCode();
         }
 
-        static async Task CreatePersonGroup(string groupId, string groupName)
+        private async Task CreatePersonGroup(string groupId, string groupName)
         {
-            await SendJson($"{{ name: '{groupName}' }}", $"{ENDPOINT}/face/v1.0/persongroups/{groupId}", GetClient().PutAsync);
+            await SendJson($"{{ name: '{groupName}' }}", $"{endpoint}/face/v1.0/persongroups/{groupId}", GetClient().PutAsync);
         }
 
-        static async Task<string> CreatePerson(string groupId, string personName)
+        private async Task<string> CreatePerson(string groupId, string personName)
         {
-            var response = await PostJson($"{{ name: '{personName}' }}", $"{ENDPOINT}/face/v1.0/persongroups/{groupId}/persons");
+            var response = await PostJson($"{{ name: '{personName}' }}", $"{endpoint}/face/v1.0/persongroups/{groupId}/persons");
             return JObject.Parse(response)["personId"].ToString();
         }
 
-        static async Task<string> AddPersonFace(string groupId, string personId, byte[] faceImage)
+        private async Task<string> AddPersonFace(string groupId, string personId, byte[] faceImage)
         {
-            var uri = $"{ENDPOINT}/face/v1.0/persongroups/{groupId}/persons/{personId}/persistedFaces";
+            var uri = $"{endpoint}/face/v1.0/persongroups/{groupId}/persons/{personId}/persistedFaces";
             return await SendData(faceImage, "application/octet-stream", uri, GetClient().PostAsync);
         }
 
-        static async Task<string> Train(string groupId)
+        private async Task<string> Train(string groupId)
         {
-            return await PostJson(string.Empty, $"{ENDPOINT}/face/v1.0/persongroups/{groupId}/train");
+            return await PostJson(string.Empty, $"{endpoint}/face/v1.0/persongroups/{groupId}/train");
         }
 
-        static async Task<bool> TrainingInProgress(string groupId)
+        private async Task<bool> TrainingInProgress(string groupId)
         {
             Thread.Sleep(THROTTLE); // throttle
-            var response = await GetClient().GetAsync($"{ENDPOINT}/face/v1.0/persongroups/{groupId}/training");
+            var response = await GetClient().GetAsync($"{endpoint}/face/v1.0/persongroups/{groupId}/training");
             var result = await response.Content.ReadAsStringAsync();
             var status = JObject.Parse(result)["status"].ToString();
             if (status == "failed") throw new Exception($"Training failed: {result}");
             return status != "succeeded";
         }
 
-        static async Task<IEnumerable<string>> DetectFaces(byte[] image)
+        private async Task<IEnumerable<string>> DetectFaces(byte[] image)
         {
-            var uri = $"{ENDPOINT}/face/v1.0/detect?returnFaceId=true&returnFaceLandmarks=true&returnFaceAttributes=age,gender,smile,facialHair,glasses,emotion,hair,makeup,occlusion,accessories";
+            var uri = $"{endpoint}/face/v1.0/detect?returnFaceId=true&returnFaceLandmarks=true&returnFaceAttributes=age,gender,smile,facialHair,glasses,emotion,hair,makeup,occlusion,accessories";
             var result = await SendData(image, "application/octet-stream", uri, GetClient().PostAsync);
             var detected = JObject.Parse($"{{ detected: {result} }}");
             var faces = detected["detected"];
             return faces.Select(f => f["faceId"].ToString());
         }
 
-        static async Task<string> IdentifyFaces(IEnumerable<string> faceIds, string groupId)
+        private async Task<string> IdentifyFaces(IEnumerable<string> faceIds, string groupId)
         {
             var faces = JsonConvert.SerializeObject(faceIds);
             var json = $"{{ personGroupId: '{groupId}', maxNumOfCandidatesReturned: 1, confidenceThreshold: 0, faceIds: {faces} }}";
-            return await PostJson(json, $"{ENDPOINT}/face/v1.0/identify");
+            return await PostJson(json, $"{endpoint}/face/v1.0/identify");
         }
 
-        static async Task RepopulatePersonGroup(string groupId, string groupName, string peoplePath)
+        private async Task RepopulatePersonGroup(string groupId, string groupName, string peoplePath)
         {
             // See: https://westus.dev.cognitive.microsoft.com/docs/services/563879b61984550e40cbbe8d/operations/563879b61984550f3039523c
             // create people and upload face images
@@ -156,7 +165,7 @@ namespace Faces
                     }
                 }
             }
-            File.WriteAllText($"{peoplePath}/people.json", people.ToString());
+            File.WriteAllText($"{peopleDirectory}/people.json", people.ToString());
             // */
 
             // train face reco
@@ -179,10 +188,11 @@ namespace Faces
                 }
             }
         }
-        static async Task TestFaceReco(string groupId, string peoplePath)
+
+        private async Task TestFaceReco(string groupId, string peoplePath)
         {
             THROTTLE = 0; // disable throttling
-            var people = JObject.Parse(File.ReadAllText($"{peoplePath}/../people/people.json"));
+            var people = JObject.Parse(File.ReadAllText($"{peopleDirectory}/people.json"));
             foreach (var p in Directory.GetFiles(peoplePath))
             {
                 var image = File.ReadAllBytes(p);
@@ -221,25 +231,68 @@ namespace Faces
             }
         }
 
-        static async void Process(string personGroupId, string personGroupName)
+        private const string personGroupId = "kuka";
+        private const string personGroupName = "KukaGroup";
+
+        public async void TrainFaces()
         {
-            await RepopulatePersonGroup(personGroupId, personGroupName, "../../../../../faces/people");
-            await TestFaceReco(personGroupId, "../../../../../faces/test");
+            await RepopulatePersonGroup(personGroupId, personGroupName, $"{peopleDirectory}/people");
+            await TestFaceReco(personGroupId, $"{peopleDirectory}/test");
             Console.WriteLine("DONE!");
         }
 
-        static void Main(string[] args)
+        private async Task<IEnumerable<string>> RecoFacesAsync(byte[] image, bool debug)
         {
-            Console.WriteLine("Face Enrollment Tool");
-            //Process("kuka", "KukaGroup");
-
-            var watcher = new FileSystemWatcher("c:/test/001") { IncludeSubdirectories = true, EnableRaisingEvents = true };
-            watcher.Created += (_, e) =>
+            THROTTLE = 0; // disable throttling
+            var people = JObject.Parse(File.ReadAllText($"{peopleDirectory}/people.json"));
+            while (true)
             {
-                Console.WriteLine($"Changed: {e.FullPath}");
-            };
+                try
+                {
+                    var detected = await DetectFaces(image);
+                    if (debug) Console.WriteLine($"  Detected faces: {detected.Count()}");
+                    var ids = await IdentifyFaces(detected, personGroupId);
+                    var faces = new List<string>();
+                    foreach (var f in JObject.Parse($"{{ ids: {ids} }}")["ids"])
+                    {
+                        if (debug) Console.WriteLine($"    Face ({f["faceId"]})");
+                        foreach (var c in f["candidates"])
+                        {
+                            var i = c["personId"].ToString();
+                            if (debug) Console.WriteLine($"      Candidate: {people[i]} (confidence={c["confidence"]})");
+                            if (double.Parse(c["confidence"].ToString()) > confidenceThreshold)
+                            {
+                                faces.Add(people[i].ToString());
+                            }
+                        }
+                    }
+                    return faces;
+                }
+                catch (Exception ex)
+                {
+                    if (ex.Message.Contains("RateLimitExceeded"))
+                    {
+                        Console.WriteLine("    RATE LIMIT EXCEEDED (throttling 20 seconds)");
+                        Thread.Sleep(THROTTLE * 7); // throttle (rate limit)
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            throw new Exception("Should not reach here");
+        }
+        public IEnumerable<string> RecoFaces(byte[] image, bool debug)
+        {
+            var task = RecoFacesAsync(image, debug);
+            task.Wait();
+            return task.Result;
+        }
 
-            Console.ReadLine();
+        public IEnumerable<string> RecoFaces(string file, bool debug)
+        {
+            return RecoFaces(File.ReadAllBytes(file), debug);
         }
     }
 }
