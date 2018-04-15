@@ -21,3 +21,4 @@ config "faceRepeatSeconds" 30
 config "faceGreeting.default" [say "Hi {0}"]
 config "faceGreeting.ashley" [say "Hello Ashley, you freaking wacko!"]
 config "faceGreeting.greg" [say "Hey Greg! You sir, are a nut!"]
+config "faceGreeting.dominik" [say "Hey Dominik! You are fired!"]
