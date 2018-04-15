@@ -39,7 +39,7 @@ Kuka.prototype.intentHandlers = {
         try {
             //var device = event.context.System.device.deviceId;
             var place = event.request.intent.slots.place.value;
-            var params = { MessageBody: 'goto "' + place +'"', QueueUrl: QUEUE_URL };
+            var params = { MessageBody: 'goto "' + place +'" "Arriving at ' + place + '"', QueueUrl: QUEUE_URL };
             sqs.sendMessage(params, function(err, data){
                 if(err) {
                     response.tellWithCard("Exception: " + JSON.stringify(err), "Greeter", "Nothing");

@@ -1,6 +1,6 @@
 ﻿// configuration values
 
-config "relayRocUri" "https://kuka.savioke.com/api/v2/tasks"
+config "relayRocUri" "https://kuka.savioke.com"
 config "relayApiToken" "DTzDXcoLEycTgihyh"
 
 // message queues on hich to receive commands

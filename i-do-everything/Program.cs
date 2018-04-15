@@ -48,9 +48,10 @@
             relay = new Relay(config["relayRocUri"], config["relayApiToken"]); // set in config.b
         }
 
-        private static void Goto(string place)
+        private static void Goto(string place, string message)
         {
-            Console.WriteLine($"Going to {place}");
+            Console.WriteLine($"Going to {place} (message={message})");
+            relay.QueueGoto(place, message);
         }
 
         #endregion relay
@@ -73,7 +74,7 @@
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Message queue command error: {ex.Message}");
+                    Console.WriteLine($"Message queue command error: {ex.Message} ({m})");
                 }
             });
             queue.Start();
@@ -165,7 +166,7 @@
             machine.Context.AddWord00("faces-train", "Create and train faces in Azure Cognitive Services (`faces-train \"myfaces/\")`", () => faces.TrainFaces());
             machine.Context.AddWord10("faces-reco", "Recognize faces in given image file (`faces-reco \"test.jpg\"`)", f => faces.RecoFaces((string)f, true));
             machine.Context.AddWord20("faces-watch", "Begin watching given directory and children for face images [debug mode optional] (`faces-watch \"c:/test\"` true)", (dir, debug) => WatchFaces(dir, debug, machine));
-            machine.Context.AddWord10("goto", "Send relay to given place (`goto booth`)", p => Goto(p));
+            machine.Context.AddWord20("goto", "Send relay to given place with given message (`goto \"booth\" \"Hello\"`)", (p, m) => Goto(p, m));
         }
 
         public static void Main(string[] args)
@@ -180,6 +181,9 @@
             InitRelay();
             InitQueue(machine);
             InitFace(machine);
+
+            var bots = relay.GetAllRobots();
+            Console.WriteLine($"Bots: {bots.ToString()}");
 
             Machine.ReadEvalPrintLoop("i-do", machine);
         }
