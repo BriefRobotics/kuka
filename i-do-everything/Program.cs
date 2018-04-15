@@ -94,20 +94,28 @@
             var lastSeen = new Dictionary<string, DateTime>();
             var repeatTime = double.Parse(config["faceRepeatSeconds"]);
             var watcher = new FileSystemWatcher(directory) { IncludeSubdirectories = true, EnableRaisingEvents = true };
-            var busy = false;
+            var wait = new EventWaitHandle(false, EventResetMode.AutoReset);
+            string imagePath = null;
             watcher.Created += (_, e) =>
             {
-                if (!busy)
+                imagePath = e.FullPath;
+                wait.Set();
+                if (debug) Console.WriteLine($"Image: {imagePath}");
+            };
+
+            (new Thread(new ThreadStart(() =>
+            {
+                while (true)
                 {
-                    busy = true;
-                    if (debug) Console.WriteLine($"Face reco {e.FullPath}");
+                    wait.WaitOne();
+                    if (debug) Console.WriteLine($"Face reco {imagePath}");
                     byte[] image = null;
                     var attempt = 3;
                     do
                     {
                         try
                         {
-                            image = File.ReadAllBytes(e.FullPath);
+                            image = File.ReadAllBytes(imagePath);
                             break;
                         }
                         catch (Exception)
@@ -135,13 +143,8 @@
                             lastSeen[f] = DateTime.Now;
                         }
                     }
-                    busy = false;
                 }
-                else
-                {
-                    Console.WriteLine("Face reco busy...");
-                }
-            };
+            })) { IsBackground = true }).Start();
         }
 
         #endregion face
