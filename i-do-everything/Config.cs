@@ -16,5 +16,10 @@ namespace I.Do.Everything
             }
             set { store.Add(key.ToLower(), value); }
         }
+
+        public bool ContainsKey(string key)
+        {
+            return store.ContainsKey(key.ToLower());
+        }
     }
 }

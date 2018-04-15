@@ -166,7 +166,7 @@
         public static string Print(IEnumerable<Word> code)
         {
             var sb = new StringBuilder();
-            foreach (var word in code)
+            foreach (var word in code.Reverse())
             {
                 sb.Append(word);
                 sb.Append(' ');

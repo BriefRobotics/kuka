@@ -89,33 +89,45 @@
                 double.Parse(config["faceConfidenceThreshold"]));
         }
 
-        private static void WatchFaces(string directory, bool debug)
+        private static void WatchFaces(string directory, bool debug, Machine machine)
         {
             var watcher = new FileSystemWatcher(directory) { IncludeSubdirectories = true, EnableRaisingEvents = true };
+            var busy = false;
             watcher.Created += (_, e) =>
             {
-                Console.WriteLine($"Changed: {e.FullPath}");
-                byte[] image = null;
-                var attempt = 3;
-                do
+                if (!busy)
                 {
-                    try
+                    busy = true;
+                    Console.WriteLine($"Face reco {e.FullPath}");
+                    byte[] image = null;
+                    var attempt = 3;
+                    do
                     {
-                        image = File.ReadAllBytes(e.FullPath);
-                        break;
-                    }
-                    catch (Exception)
-                    {
-                        Thread.Sleep(100); // file lock
-                    }
-                } while (attempt-- > 0);
+                        try
+                        {
+                            image = File.ReadAllBytes(e.FullPath);
+                            break;
+                        }
+                        catch (Exception)
+                        {
+                            Thread.Sleep(100); // file lock
+                        }
+                    } while (attempt-- > 0);
 
-                if (image != null)
-                {
-                    foreach (var f in faces.RecoFaces(image, debug))
+                    if (image != null)
                     {
-                        speech.Say($"Hi {f}!");
+                        foreach (var f in faces.RecoFaces(image, debug))
+                        {
+                            var key = $"faceGreeting.{f}";
+                            var cmd = config.ContainsKey(key) ? config[key] : config["faceGreeting.default"];
+                            machine.Execute(String.Format(cmd, f));
+                        }
                     }
+                    busy = false;
+                }
+                else
+                {
+                    Console.WriteLine("Face reco busy...");
                 }
             };
         }
@@ -129,10 +141,10 @@
             machine.Context.AddWord00("speechreco", "Start speech recognition, after having added `phrase` bindings (`reco`)", () => speech.SetGrammar(Speech.Choices(speechCommands.Select(kv => Speech.Phrase(kv.Key, Brief.Print(kv.Value.Reverse()))).ToArray())));
             machine.Context.AddWord20("window", "Show window in foreground by process name; optionally maximized (`window \"Skype\" true`)", (n, m) => Windows.ShowWindow(n, m));
             machine.Context.AddWord10("key", "Send key to forground app (`key '^{q}`)", k => Windows.SendKey(k));
-            machine.Context.AddWord20("config", "Set configuration value (`config 'port 80`)", (k, v) => config[k] = v);
+            machine.Context.AddWord20("config", "Set configuration value (`config 'port 80`)", (k, v) => config[k] = v is IEnumerable<Word> ? Brief.Print(v) : v.ToString());
             machine.Context.AddWord00("faces-train", "Create and train faces in Azure Cognitive Services (`faces-train \"myfaces/\")`", () => faces.TrainFaces());
             machine.Context.AddWord10("faces-reco", "Recognize faces in given image file (`faces-reco \"test.jpg\"`)", f => faces.RecoFaces((string)f, true));
-            machine.Context.AddWord20("faces-watch", "Begin watching given directory and children for face images [debug mode optional] (`faces-watch \"c:/test\"` true)", (dir, debug) => WatchFaces(dir, debug));
+            machine.Context.AddWord20("faces-watch", "Begin watching given directory and children for face images [debug mode optional] (`faces-watch \"c:/test\"` true)", (dir, debug) => WatchFaces(dir, debug, machine));
         }
 
         public static void Main(string[] args)
