@@ -4,6 +4,7 @@ config "relayRocUri" "https://kuka.savioke.com/api/v2/tasks"
 config "relayApiToken" "DTzDXcoLEycTgihyh"
 
 // message queues on hich to receive commands
+config "amazonSqsUri" "https://sqs.us-west-2.amazonaws.com/613660770529/robot0"
 config "ashleyf-dell.amazonSqsUri" "https://sqs.us-west-2.amazonaws.com/613660770529/robot0"
 config "amazonSqsRegion" "us-west-2"
 config "amazonSqsKey" "AKIAIEBVVLIN6RTQXCRQ"
