@@ -10,7 +10,7 @@ config "amazonSqsKey" "AKIAIEBVVLIN6RTQXCRQ"
 config "amazonSqsSecret" "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"
 
 // face reco - cognitive services
-config "azureCognitiveKey" "05e23a6b8a494ac3ba2a3d49053ccf48"
+config "azureCognitiveKey" "9fe288f421a94b2dbe48181a62b6c216"
 config "azureCognitiveUri" "https://westcentralus.api.cognitive.microsoft.com"
 
 config "faceDirectory" "../../../faces"

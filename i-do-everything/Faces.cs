@@ -18,7 +18,7 @@ namespace I.Do.Faces
         public readonly string endpoint;
         public readonly string peopleDirectory; // faces and test images
         public readonly double confidenceThreshold;
-        public static int THROTTLE = 3000;
+        public static int THROTTLE = 0; // 3000;
 
         public Faces(string key, string endpoint, string peopleDirectory, double confidenceThreshold)
         {
@@ -155,7 +155,7 @@ namespace I.Do.Faces
                             if (ex.Message.Contains("RateLimitExceeded"))
                             {
                                 Console.WriteLine("    RATE LIMIT EXCEEDED (throttling 20 seconds)");
-                                Thread.Sleep(THROTTLE * 7); // throttle (rate limit)
+                                Thread.Sleep(20000); // throttle (rate limit)
                             }
                             else
                             {
@@ -246,40 +246,36 @@ namespace I.Do.Faces
             THROTTLE = 0; // disable throttling
             var people = JObject.Parse(File.ReadAllText($"{peopleDirectory}/people.json"));
             var faces = new List<string>();
-            while (true)
+            try
             {
-                try
+                var detected = await DetectFaces(image);
+                if (debug) Console.WriteLine($"  Detected faces: {detected.Count()}");
+                var ids = await IdentifyFaces(detected, personGroupId);
+                faces.Clear();
+                foreach (var f in JObject.Parse($"{{ ids: {ids} }}")["ids"])
                 {
-                    var detected = await DetectFaces(image);
-                    if (debug) Console.WriteLine($"  Detected faces: {detected.Count()}");
-                    var ids = await IdentifyFaces(detected, personGroupId);
-                    faces.Clear();
-                    foreach (var f in JObject.Parse($"{{ ids: {ids} }}")["ids"])
+                    if (debug) Console.WriteLine($"    Face ({f["faceId"]})");
+                    foreach (var c in f["candidates"])
                     {
-                        if (debug) Console.WriteLine($"    Face ({f["faceId"]})");
-                        foreach (var c in f["candidates"])
+                        var i = c["personId"].ToString();
+                        if (debug) Console.WriteLine($"      Candidate: {people[i]} (confidence={c["confidence"]})");
+                        if (double.Parse(c["confidence"].ToString()) > confidenceThreshold)
                         {
-                            var i = c["personId"].ToString();
-                            if (debug) Console.WriteLine($"      Candidate: {people[i]} (confidence={c["confidence"]})");
-                            if (double.Parse(c["confidence"].ToString()) > confidenceThreshold)
-                            {
-                                faces.Add(people[i].ToString());
-                            }
+                            faces.Add(people[i].ToString());
                         }
                     }
-                    return faces;
                 }
-                catch (Exception ex)
+                return faces;
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("RateLimitExceeded"))
                 {
-                    if (ex.Message.Contains("RateLimitExceeded"))
-                    {
-                        Console.WriteLine("    RATE LIMIT EXCEEDED (throttling 20 seconds)");
-                        Thread.Sleep(THROTTLE * 7); // throttle (rate limit)
-                    }
-                    else
-                    {
-                        break;
-                    }
+                    Console.WriteLine("    RATE LIMIT EXCEEDED");
+                }
+                else
+                {
+                    Console.WriteLine($"Exception: {ex.Message}");
                 }
             }
             return faces;
