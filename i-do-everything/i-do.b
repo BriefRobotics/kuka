@@ -3,7 +3,7 @@
 // phrase "notepad" [window "Notepad" true]
 // speechreco
 
-faces-watch "c:/test" true
+faces-watch "C:/OCCO/LiveStreams" true
 
 def "skype" [window "Skype"]
 def "ctrl-q" [key '^{q}]
