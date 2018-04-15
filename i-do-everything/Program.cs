@@ -91,6 +91,8 @@
 
         private static void WatchFaces(string directory, bool debug, Machine machine)
         {
+            var lastSeen = new Dictionary<string, DateTime>();
+            var repeatTime = double.Parse(config["faceRepeatSeconds"]);
             var watcher = new FileSystemWatcher(directory) { IncludeSubdirectories = true, EnableRaisingEvents = true };
             var busy = false;
             watcher.Created += (_, e) =>
@@ -98,7 +100,7 @@
                 if (!busy)
                 {
                     busy = true;
-                    Console.WriteLine($"Face reco {e.FullPath}");
+                    if (debug) Console.WriteLine($"Face reco {e.FullPath}");
                     byte[] image = null;
                     var attempt = 3;
                     do
@@ -118,9 +120,19 @@
                     {
                         foreach (var f in faces.RecoFaces(image, debug))
                         {
-                            var key = $"faceGreeting.{f}";
-                            var cmd = config.ContainsKey(key) ? config[key] : config["faceGreeting.default"];
-                            machine.Execute(String.Format(cmd, f));
+                            if (debug) Console.WriteLine($"Recognized {f}");
+                            var last = lastSeen.ContainsKey(f) ? lastSeen[f] : DateTime.MinValue;
+                            if ((DateTime.Now - last).TotalSeconds > repeatTime)
+                            {
+                                var key = $"faceGreeting.{f}";
+                                var cmd = config.ContainsKey(key) ? config[key] : config["faceGreeting.default"];
+                                machine.Execute(String.Format(cmd, f));
+                            }
+                            else
+                            {
+                                if (debug) Console.WriteLine("  Already seen recently...");
+                            }
+                            lastSeen[f] = DateTime.Now;
                         }
                     }
                     busy = false;

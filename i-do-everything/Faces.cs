@@ -245,6 +245,7 @@ namespace I.Do.Faces
         {
             THROTTLE = 0; // disable throttling
             var people = JObject.Parse(File.ReadAllText($"{peopleDirectory}/people.json"));
+            var faces = new List<string>();
             while (true)
             {
                 try
@@ -252,7 +253,7 @@ namespace I.Do.Faces
                     var detected = await DetectFaces(image);
                     if (debug) Console.WriteLine($"  Detected faces: {detected.Count()}");
                     var ids = await IdentifyFaces(detected, personGroupId);
-                    var faces = new List<string>();
+                    faces.Clear();
                     foreach (var f in JObject.Parse($"{{ ids: {ids} }}")["ids"])
                     {
                         if (debug) Console.WriteLine($"    Face ({f["faceId"]})");
@@ -281,7 +282,7 @@ namespace I.Do.Faces
                     }
                 }
             }
-            throw new Exception("Should not reach here");
+            return faces;
         }
         public IEnumerable<string> RecoFaces(byte[] image, bool debug)
         {
