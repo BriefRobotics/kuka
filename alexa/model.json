@@ -1,0 +1,58 @@
+{
+	"interactionModel": {
+		"languageModel": {
+			"invocationName": "kuka",
+			"intents": [
+				{
+					"name": "AMAZON.CancelIntent",
+					"samples": [
+						"Nevermind",
+						"Cancel"
+					]
+				},
+				{
+					"name": "AMAZON.HelpIntent",
+					"samples": [
+						"What can I say"
+					]
+				},
+				{
+					"name": "AMAZON.StopIntent",
+					"samples": [
+						"Stop"
+					]
+				},
+				{
+					"name": "goto",
+					"slots": [
+						{
+							"name": "place",
+							"type": "place"
+						}
+					],
+					"samples": [
+						"Go to {place}",
+						"Go to the {place}"
+					]
+				}
+			],
+			"types": [
+				{
+					"name": "place",
+					"values": [
+						{
+							"name": {
+								"value": "charger"
+							}
+						},
+						{
+							"name": {
+								"value": "beanbag"
+							}
+						}
+					]
+				}
+			]
+		}
+	}
+}

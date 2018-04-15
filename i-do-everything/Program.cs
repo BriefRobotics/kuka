@@ -48,6 +48,11 @@
             relay = new Relay(config["relayRocUri"], config["relayApiToken"]); // set in config.b
         }
 
+        private static void Goto(string place)
+        {
+            Console.WriteLine($"Going to {place}");
+        }
+
         #endregion relay
 
         #region queue
@@ -160,6 +165,7 @@
             machine.Context.AddWord00("faces-train", "Create and train faces in Azure Cognitive Services (`faces-train \"myfaces/\")`", () => faces.TrainFaces());
             machine.Context.AddWord10("faces-reco", "Recognize faces in given image file (`faces-reco \"test.jpg\"`)", f => faces.RecoFaces((string)f, true));
             machine.Context.AddWord20("faces-watch", "Begin watching given directory and children for face images [debug mode optional] (`faces-watch \"c:/test\"` true)", (dir, debug) => WatchFaces(dir, debug, machine));
+            machine.Context.AddWord10("goto", "Send relay to given place (`goto booth`)", p => Goto(p));
         }
 
         public static void Main(string[] args)

@@ -203,14 +203,17 @@ namespace I.Do.Faces
                     {
                         var detected = await DetectFaces(image);
                         Console.WriteLine($"  Detected faces: {detected.Count()} ('{Path.GetFileName(p)}')");
-                        var ids = await IdentifyFaces(detected, groupId);
-                        foreach (var f in JObject.Parse($"{{ ids: {ids} }}")["ids"])
+                        if (detected.Count() > 0)
                         {
-                            Console.WriteLine($"    Face ({f["faceId"]})");
-                            foreach (var c in f["candidates"])
+                            var ids = await IdentifyFaces(detected, groupId);
+                            foreach (var f in JObject.Parse($"{{ ids: {ids} }}")["ids"])
                             {
-                                var i = c["personId"].ToString();
-                                Console.WriteLine($"      Canditate: {people[i]} (confidence={c["confidence"]})");
+                                Console.WriteLine($"    Face ({f["faceId"]})");
+                                foreach (var c in f["candidates"])
+                                {
+                                    var i = c["personId"].ToString();
+                                    Console.WriteLine($"      Canditate: {people[i]} (confidence={c["confidence"]})");
+                                }
                             }
                         }
                         finished = true;
@@ -250,18 +253,21 @@ namespace I.Do.Faces
             {
                 var detected = await DetectFaces(image);
                 if (debug) Console.WriteLine($"  Detected faces: {detected.Count()}");
-                var ids = await IdentifyFaces(detected, personGroupId);
-                faces.Clear();
-                foreach (var f in JObject.Parse($"{{ ids: {ids} }}")["ids"])
+                if (detected.Count() > 0)
                 {
-                    if (debug) Console.WriteLine($"    Face ({f["faceId"]})");
-                    foreach (var c in f["candidates"])
+                    var ids = await IdentifyFaces(detected, personGroupId);
+                    faces.Clear();
+                    foreach (var f in JObject.Parse($"{{ ids: {ids} }}")["ids"])
                     {
-                        var i = c["personId"].ToString();
-                        if (debug) Console.WriteLine($"      Candidate: {people[i]} (confidence={c["confidence"]})");
-                        if (double.Parse(c["confidence"].ToString()) > confidenceThreshold)
+                        if (debug) Console.WriteLine($"    Face ({f["faceId"]})");
+                        foreach (var c in f["candidates"])
                         {
-                            faces.Add(people[i].ToString());
+                            var i = c["personId"].ToString();
+                            if (debug) Console.WriteLine($"      Candidate: {people[i]} (confidence={c["confidence"]})");
+                            if (double.Parse(c["confidence"].ToString()) > confidenceThreshold)
+                            {
+                                faces.Add(people[i].ToString());
+                            }
                         }
                     }
                 }

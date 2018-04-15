@@ -5,7 +5,7 @@ config "relayApiToken" "DTzDXcoLEycTgihyh"
 
 // message queues on hich to receive commands
 config "amazonSqsUri" "https://sqs.us-west-2.amazonaws.com/613660770529/robot0"
-config "ashleyf-dell.amazonSqsUri" "https://sqs.us-west-2.amazonaws.com/613660770529/robot0"
+config "ashleyf-dell.amazonSqsUri" "https://sqs.us-west-2.amazonaws.com/613660770529/robot1"
 config "amazonSqsRegion" "us-west-2"
 config "amazonSqsKey" "AKIAIEBVVLIN6RTQXCRQ"
 config "amazonSqsSecret" "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"
@@ -21,3 +21,5 @@ config "faceRepeatSeconds" 30
 config "faceGreeting.default" [say "Hi {0}"]
 config "faceGreeting.ashley" [say "Hello Ashley, you freaking wacko!"]
 config "faceGreeting.greg" [say "Hey Greg! You sir, are a nut!"]
+config "faceGreeting.dominik" [say "Hey Dominik! You're fired!"]
+config "faceGreeting.bernd" [say "Good morning Bernd! Nice to see you!"]
