@@ -62,7 +62,9 @@
 
         private static void InitQueue(Machine machine)
         {
-            var uri = config["amazonSqsUri"];
+            var role = config["role"];
+            var sqs = config["amazonSqsBaseUri"];
+            var uri = $"{sqs}/{role}";
             var region = config["amazonSqsRegion"];
             var key = config["amazonSqsKey"];
             var secret = config["amazonSqsSecret"];
@@ -78,6 +80,7 @@
                 }
             });
             queue.Start();
+            Console.WriteLine($"Role: {role} ({uri})");
         }
 
         #endregion queue
@@ -181,9 +184,6 @@
             InitRelay();
             InitQueue(machine);
             InitFace(machine);
-
-            var bots = relay.GetAllRobots();
-            Console.WriteLine($"Bots: {bots.ToString()}");
 
             Machine.ReadEvalPrintLoop("i-do", machine);
         }
