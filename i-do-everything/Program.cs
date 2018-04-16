@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading;
     using System.Collections.Generic;
+    using Newtonsoft.Json.Linq;
     using I.Do.Brief;
     using I.Do.Speech;
     using I.Do.Windows;
@@ -48,10 +49,21 @@
             relay = new Relay(config["relayRocUri"], config["relayApiToken"]); // set in config.b
         }
 
-        private static void Goto(string place, string message)
+        private static void Goto(string place)
         {
-            Console.WriteLine($"Going to {place} (message={message})");
-            // relay.QueueGoto(place, message);
+            Console.WriteLine($"Going to {place}");
+            relay.QueueGoto(place);
+        }
+
+        private static void Stop()
+        {
+            Console.WriteLine($"Stopping");
+            var tasks = JArray.Parse(relay.GetAllTasks());
+            foreach (var t in tasks)
+            {
+                var id = t["_id"].Value<string>();
+                relay.CancelTask(id);
+            }
         }
 
         #endregion relay
@@ -169,7 +181,8 @@
             machine.Context.AddWord00("faces-train", "Create and train faces in Azure Cognitive Services (`faces-train \"myfaces/\")`", () => faces.TrainFaces());
             machine.Context.AddWord10("faces-reco", "Recognize faces in given image file (`faces-reco \"test.jpg\"`)", f => faces.RecoFaces((string)f, true));
             machine.Context.AddWord20("faces-watch", "Begin watching given directory and children for face images [debug mode optional] (`faces-watch \"c:/test\"` true)", (dir, debug) => WatchFaces(dir, debug, machine));
-            machine.Context.AddWord20("goto", "Send relay to given place with given message (`goto \"booth\" \"Hello\"`)", (p, m) => Goto(p, m));
+            machine.Context.AddWord10("nav", "Send relay to given place with given message (`nav \"booth\" \"Hello\"`)", p => Goto(p));
+            machine.Context.AddWord00("stop", "Stop relay by canceling previous task (`stop`)", () => Stop());
         }
 
         public static void Main(string[] args)

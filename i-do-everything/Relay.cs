@@ -19,79 +19,89 @@ namespace I.Do.Relay
             this.apiToken = apiToken;
         }
 
-        public async void QueueTask(string program, string queue = "api", int priority = 5, string args = null)
+        public async Task<string> QueueTask(string program, string queue = "api", int priority = 5, string args = null)
         {
             var client = new HttpClient() { BaseAddress = rocUri };
             client.DefaultRequestHeaders.Add("X-API-TOKEN", apiToken);
             var content = new FormUrlEncodedContent(new KeyValuePair<string, string>[] {
                 new KeyValuePair<string, string>("program", program),
-                new KeyValuePair<string, string>("queueName", queue),
-                new KeyValuePair<string, string>("priority", $"{priority}"),
                 new KeyValuePair<string, string>("args", args),
             });
             var response = await client.PostAsync($"{apiBase}/tasks", content);
             response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsStringAsync();
         }
 
-        public void QueueDelivery(string args, string queue = "api", int priority = 5)
+        public string QueueDelivery(string args, string queue = "api", int priority = 5)
         {
             // for args, see http://docs.savioke.com/api-dev/#api-Tasks-NewDelivery
             // TODO: higher-level than JObject
-            QueueTask("Delivery", queue, priority, args);
+            var result = QueueTask("Delivery", queue, priority, args);
+            result.Wait();
+            return result.Result;
         }
 
-        public void QueueGoto(string place, string message, string queue = "api", int priority = 5)
+        public string QueueGoto(string place, string message = "Hello!", string queue = "api", int priority = 5)
         {
-            // var args = JObject.Parse($"{{ \"location\":\"{place}\", message:'{message}', language:'en', timeout:'240' }}");
-            QueueTask("Goto", queue, priority, $"{{ location:\"{place}\", message:\"{message}\"}}");
+            var result = QueueTask("Goto", queue, priority, $"{{\"location\":\"{place}\",\"timeout\":0}}");
+            result.Wait();
+            return result.Result;
         }
 
         public async void CancelTask(string id)
         {
             var client = new HttpClient() { BaseAddress = rocUri };
             client.DefaultRequestHeaders.Add("X-API-TOKEN", apiToken);
-            var response = await client.DeleteAsync($"{apiBase}/tasks/:{id}");
+            var response = await client.DeleteAsync($"{apiBase}/tasks/{id}");
             response.EnsureSuccessStatusCode();
+            var foo = await response.Content.ReadAsStringAsync();
         }
 
-        public async Task<JObject> GetApi(string api) // TODO: higher-level than JObject
+        public async Task<string> GetApiAsync(string api) // TODO: higher-level than JObject
         {
             var client = new HttpClient() { BaseAddress = rocUri };
             client.DefaultRequestHeaders.Add("X-API-TOKEN", apiToken);
             var response = await client.GetAsync($"{apiBase}/{api}");
             response.EnsureSuccessStatusCode();
             var result = await response.Content.ReadAsStringAsync();
-            return JObject.Parse(result);
+            return result;
         }
 
-        public async Task<JObject> GetAllPlaces() // TODO: higher-level than JObject
+        public string GetApi(string api)
         {
-            return await GetApi("places");
+            var result = GetApiAsync("tasks");
+            result.Wait();
+            return result.Result;
         }
 
-        public async Task<JObject> GetPlaces(string id) // TODO: higher-level than JObject
+        public string GetAllPlaces() // TODO: higher-level than JObject
         {
-            return await GetApi($"places/:{id}");
+            return GetApi("places");
         }
 
-        public async Task<JObject> GetAllRobots() // TODO: higher-level than JObject
+        public string GetPlaces(string id) // TODO: higher-level than JObject
         {
-            return await GetApi("robots");
+            return GetApi($"places/:{id}");
         }
 
-        public async Task<JObject> GetRobot(string id) // TODO: higher-level than JObject
+        public string GetAllRobots() // TODO: higher-level than JObject
         {
-            return await GetApi($"robots/:{id}");
+            return GetApi("robots");
         }
 
-        public async Task<JObject> GetAllTasks() // TODO: higher-level than JObject
+        public string GetRobot(string id) // TODO: higher-level than JObject
         {
-            return await GetApi("tasks");
+            return GetApi($"robots/:{id}");
         }
 
-        public async Task<JObject> GetTask(string id) // TODO: higher-level than JObject
+        public string GetAllTasks() // TODO: higher-level than JObject
         {
-            return await GetApi($"tasks/:{id}");
+            return GetApi("tasks");
+        }
+
+        public string GetTask(string id) // TODO: higher-level than JObject
+        {
+            return GetApi($"tasks/:{id}");
         }
     }
 }
