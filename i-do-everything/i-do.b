@@ -1,7 +1,5 @@
-﻿// phrase "hi" [say "Howdy"]
-// phrase "howdy" [say "Hi"]
-// phrase "notepad" [window "Notepad" true]
-// speechreco
+﻿phrase "Will you marry me?" [say "I do."]
+speechreco
 
 faces-watch "C:/OCCO/LiveStreams" true
 

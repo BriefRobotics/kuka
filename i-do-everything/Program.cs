@@ -28,7 +28,7 @@
                 Console.WriteLine($"Heard: '{e.Text}' (confidence={e.Confidence})");
                 try
                 {
-                    if (e.Confidence > 0.1) machine.Execute((string)e.Semantics.Value);
+                    if (e.Confidence > 0.1 && e.Semantics.Value != null) machine.Execute((string)e.Semantics.Value);
                 }
                 catch (Exception ex)
                 {
@@ -51,7 +51,7 @@
         private static void Goto(string place, string message)
         {
             Console.WriteLine($"Going to {place} (message={message})");
-            relay.QueueGoto(place, message);
+            // relay.QueueGoto(place, message);
         }
 
         #endregion relay
@@ -162,7 +162,7 @@
         {
             machine.Context.AddWord10("say", "Speak given string", s => speech.Say(s));
             machine.Context.AddWord20("phrase", "Add phrase to speech recognition grammar; bind to Brief expression (`phrase 'hello [say \"hi there\"]`)", (p, b) => speechCommands.Add(p, b));
-            machine.Context.AddWord00("speechreco", "Start speech recognition, after having added `phrase` bindings (`reco`)", () => speech.SetGrammar(Speech.Choices(speechCommands.Select(kv => Speech.Phrase(kv.Key, Brief.Print(kv.Value.Reverse()))).ToArray())));
+            machine.Context.AddWord00("speechreco", "Start speech recognition, after having added `phrase` bindings (`reco`)", () => speech.SetGrammar(Speech.Choices(speechCommands.Select(kv => Speech.Phrase(kv.Key, Brief.Print(kv.Value))).ToArray())));
             machine.Context.AddWord20("window", "Show window in foreground by process name; optionally maximized (`window \"Skype\" true`)", (n, m) => Windows.ShowWindow(n, m));
             machine.Context.AddWord10("key", "Send key to forground app (`key '^{q}`)", k => Windows.SendKey(k));
             machine.Context.AddWord20("config", "Set configuration value (`config 'port 80`)", (k, v) => config[k] = v is IEnumerable<Word> ? Brief.Print(v) : v.ToString());

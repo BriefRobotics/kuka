@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Speech.Synthesis;
 using System.Speech.Recognition;
 
@@ -13,6 +14,9 @@ namespace I.Do.Speech
 
         public void SetGrammar(GrammarBuilder grammar)
         {
+            var d = new GrammarBuilder();
+            d.AppendDictation();
+            var g = new Grammar(new Choices(grammar, d));
             reco.SetInputToDefaultAudioDevice();
             reco.UnloadAllGrammars();
             reco.LoadGrammar(new Grammar(grammar));
