@@ -29,7 +29,6 @@ namespace I.Do.Relay
                 new KeyValuePair<string, string>("priority", $"{priority}"),
                 new KeyValuePair<string, string>("args", args),
             });
-            // curl 'program=Delivery&args={"dropoffs": [{"location": "Room 3"}]}' http://example.org/api/v2/tasks
             var response = await client.PostAsync($"{apiBase}/tasks", content);
             response.EnsureSuccessStatusCode();
         }
@@ -44,7 +43,7 @@ namespace I.Do.Relay
         public void QueueGoto(string place, string message, string queue = "api", int priority = 5)
         {
             // var args = JObject.Parse($"{{ \"location\":\"{place}\", message:'{message}', language:'en', timeout:'240' }}");
-            QueueTask("Goto", queue, priority, $"{{ \"location\":\"{place}\"}}");
+            QueueTask("Goto", queue, priority, $"{{ location:\"{place}\", message:\"{message}\"}}");
         }
 
         public async void CancelTask(string id)
