@@ -43,7 +43,7 @@ namespace I.Do.Relay
 
         public string QueueGoto(string place, string message = "Hello!", string queue = "api", int priority = 5)
         {
-            var result = QueueTask("Goto", queue, priority, $"{{\"location\":\"{place}\",\"timeout\":0}}");
+            var result = QueueTask("Goto", queue, priority, $"{{\"location\":\"{place}\",\"timeout\":1}}");
             result.Wait();
             return result.Result;
         }
