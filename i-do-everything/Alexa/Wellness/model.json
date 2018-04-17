@@ -1,0 +1,111 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "the wellness module",
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": [
+                      "What can I say",
+                      "What I can say"
+                    ]
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "goto",
+                    "slots": [
+                        {
+                            "name": "place",
+                            "type": "place"
+                        }
+                    ],
+                    "samples": [
+                        "Go to {place}",
+                        "Go to the {place}"
+                    ]
+                },
+                {
+                    "name": "summon",
+                    "slots": [],
+                    "samples": [
+                        "Please bring me the wellness module",
+                        "Bring me the wellness module",
+                        "Bring the wellness module to me",
+                        "Bring the wellness module here",
+                        "Send the wellness module to me",
+                        "Send the wellness module here",
+                        "Come to me please",
+                        "Please come to me",
+                        "Come to me",
+                        "Please come over here",
+                        "Please come here",
+                        "Come over here please",
+                        "Come here please",
+                        "Come over here",
+                        "Come here"
+                    ]
+                }
+            ],
+            "types": [
+                {
+                    "name": "place",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "corner"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "charger"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "beanbag"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "dialog": {
+            "intents": [
+                {
+                    "name": "goto",
+                    "confirmationRequired": true,
+                    "prompts": {
+                        "confirmation": "Confirm.Intent.1353591812066"
+                    },
+                    "slots": [
+                        {
+                            "name": "place",
+                            "type": "place",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        }
+                    ]
+                }
+            ]
+        },
+        "prompts": [
+            {
+                "id": "Confirm.Intent.1353591812066",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "You want to send i-do to {place} ?"
+                    }
+                ]
+            }
+        ]
+    }
+}

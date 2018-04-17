@@ -49,10 +49,16 @@
             relay = new Relay(config["relayRocUri"], config["relayApiToken"]); // set in config.b
         }
 
-        private static void Goto(string place)
+        private static void Goto(string place, string queue)
         {
             Console.WriteLine($"Going to {place}");
-            relay.QueueGoto(place);
+            relay.QueueGoto(place, queue);
+        }
+
+        private static void Wander(IEnumerable<string> places, string queue)
+        {
+            Console.WriteLine($"Going to {string.Join(", ", places)}");
+            relay.QueueWander(places, queue);
         }
 
         private static void Stop()
@@ -181,7 +187,8 @@
             machine.Context.AddWord00("faces-train", "Create and train faces in Azure Cognitive Services (`faces-train \"myfaces/\")`", () => faces.TrainFaces());
             machine.Context.AddWord10("faces-reco", "Recognize faces in given image file (`faces-reco \"test.jpg\"`)", f => faces.RecoFaces((string)f, true));
             machine.Context.AddWord20("faces-watch", "Begin watching given directory and children for face images [debug mode optional] (`faces-watch \"c:/test\"` true)", (dir, debug) => WatchFaces(dir, debug, machine));
-            machine.Context.AddWord10("nav", "Send relay to given place with given message (`nav \"booth\" \"Hello\"`)", p => Goto(p));
+            machine.Context.AddWord10("nav", "Send relay to given place (`nav \"booth\"`)", p => Goto(p, config["relayQueue"]));
+            machine.Context.AddWord10("tour", "Send relay to given places (`tour [\"booth\",\"foo\",\"bar\"]`)", p => Wander(((IEnumerable<Word>)p).Reverse().Select(n => n.ToString()), config["relayQueue"]));
             machine.Context.AddWord00("stop", "Stop relay by canceling previous task (`stop`)", () => Stop());
         }
 

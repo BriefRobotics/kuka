@@ -1,5 +1,8 @@
 'use strict';
 
+module.exports = AlexaSkill;
+var AWS = require('aws-sdk');
+
 function AlexaSkill(appId) {
     this._appId = appId;
 }
@@ -153,8 +156,21 @@ Response.prototype = (function () {
                 cardContent: cardContent,
                 shouldEndSession: false
             }));
+        },
+        send: function (role, message, say, response) {
+            try {
+                var sqs = new AWS.SQS({ region: 'us-west-2' });
+                var params = { MessageBody: message, QueueUrl: 'https://sqs.us-west-2.amazonaws.com/613660770529/' + role };
+                sqs.sendMessage(params, function (err, data) {
+                    if (err) {
+                        response.tellWithCard("Exception: " + JSON.stringify(err), "Kuka", "Error");
+                    } else {
+                        response.tell(say);
+                    }
+                });
+            } catch (ex) {
+                response.tellWithCard("Exception: " + JSON.stringify(ex), "Kuka", "Error");
+            }
         }
     };
 })();
-
-module.exports = AlexaSkill;

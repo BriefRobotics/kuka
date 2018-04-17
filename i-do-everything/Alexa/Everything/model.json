@@ -1,129 +1,74 @@
 {
-  "interactionModel": {
-    "languageModel": {
-      "invocationName": "i do",
-      "intents": [
-        {
-          "name": "AMAZON.CancelIntent",
-          "samples": [
-            "Nevermind",
-            "Cancel"
-          ]
-        },
-        {
-          "name": "AMAZON.HelpIntent",
-          "samples": [
-            "What can I say"
-          ]
-        },
-        {
-          "name": "AMAZON.StopIntent",
-          "samples": [
-            "Halt",
-            "Stop"
-          ]
-        },
-        {
-          "name": "goto",
-          "slots": [
-            {
-              "name": "place",
-              "type": "place"
-            }
-          ],
-          "samples": [
-            "Go to {place}",
-            "Go to the {place}"
-          ]
-        },
-        {
-          "name": "coffee",
-          "slots": [],
-          "samples": [
-            "Send coffee here",
-            "Send coffee to me",
-            "Bring coffee here",
-            "Bring a coffee to me",
-            "Bring me a coffee",
-            "Please bring be a coffee",
-            "I'm thirsty"
-          ]
-        },
-        {
-          "name": "purifier",
-          "slots": [],
-          "samples": [
-            "Send the purifier here",
-            "Send the purifier",
-            "Send the air purifier",
-            "Bring the air purifier here",
-            "Please bring the air purifier to me",
-            "Come purify my air"
-          ]
-        },
-        {
-          "name": "occo",
-          "slots": [],
-          "samples": [
-            "Come snap my photo",
-            "Come take a selfie",
-            "Come take my picture",
-            "Come take my photo",
-            "Bring OCCO",
-            "Bring OCCO here",
-            "Send OCCO here",
-            "Send OCCO"
-          ]
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "the robot",
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": [
+                      "What can I say",
+                      "What I can say"
+                    ]
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "coffee",
+                    "slots": [],
+                    "samples": [
+                        "Send coffee here",
+                        "Send coffee to me",
+                        "Bring coffee here",
+                        "Bring a coffee to me",
+                        "Bring me a coffee",
+                        "Please bring be a coffee",
+                        "I'm thirsty"
+                    ]
+                },
+                {
+                    "name": "purifier",
+                    "slots": [],
+                    "samples": [
+                        "Send the purifier here",
+                        "Send the purifier",
+                        "Send the air purifier",
+                        "Bring the air purifier here",
+                        "Please bring the air purifier to me",
+                        "Come purify my air"
+                    ]
+                },
+                {
+                    "name": "occo",
+                    "slots": [],
+                    "samples": [
+                        "Come snap my photo",
+                        "Come take a selfie",
+                        "Come take my picture",
+                        "Come take my photo",
+                        "Bring OCCO",
+                        "Bring OCCO here",
+                        "Send OCCO here",
+                        "Send OCCO"
+                    ]
+                },
+                {
+                    "name": "wellness",
+                    "slots": [],
+                    "samples": [
+                        "Bring the wellness module to me",
+                        "Bring the wellness module here",
+                        "Send the wellness module to me",
+                        "Send the wellness module"
+                    ]
+                }
+            ],
+            "types": []
         }
-      ],
-      "types": [
-        {
-          "name": "place",
-          "values": [
-            {
-              "name": {
-                "value": "charger"
-              }
-            },
-            {
-              "name": {
-                "value": "beanbag"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    "dialog": {
-      "intents": [
-        {
-          "name": "goto",
-          "confirmationRequired": true,
-          "prompts": {
-            "confirmation": "Confirm.Intent.1353591812066"
-          },
-          "slots": [
-            {
-              "name": "place",
-              "type": "place",
-              "confirmationRequired": false,
-              "elicitationRequired": false,
-              "prompts": {}
-            }
-          ]
-        }
-      ]
-    },
-    "prompts": [
-      {
-        "id": "Confirm.Intent.1353591812066",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "You want to send i-do to {place} ?"
-          }
-        ]
-      }
-    ]
-  }
+    }
 }

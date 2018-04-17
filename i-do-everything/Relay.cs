@@ -25,6 +25,7 @@ namespace I.Do.Relay
             client.DefaultRequestHeaders.Add("X-API-TOKEN", apiToken);
             var content = new FormUrlEncodedContent(new KeyValuePair<string, string>[] {
                 new KeyValuePair<string, string>("program", program),
+                new KeyValuePair<string, string>("queueName", queue),
                 new KeyValuePair<string, string>("args", args),
             });
             var response = await client.PostAsync($"{apiBase}/tasks", content);
@@ -32,24 +33,33 @@ namespace I.Do.Relay
             return await response.Content.ReadAsStringAsync();
         }
 
-        public string QueueDelivery(string args, string queue = "api", int priority = 5)
+        /* unused public string QueueDelivery(string args, string queue = "api", int priority = 5)
         {
             // for args, see http://docs.savioke.com/api-dev/#api-Tasks-NewDelivery
             // TODO: higher-level than JObject
             var result = QueueTask("Delivery", queue, priority, args);
             result.Wait();
             return result.Result;
-        }
+        } */
 
-        public string QueueGoto(string place, string message = "Hello!", string queue = "api", int priority = 5)
+        public string QueueGoto(string place, string queue, string message = "Hello!", int priority = 5)
         {
             var result = QueueTask("Goto", queue, priority, $"{{\"location\":\"{place}\",\"timeout\":1}}");
             result.Wait();
             return result.Result;
         }
 
+        public string QueueWander(IEnumerable<string> places, string queue, string message = "Hello!", int priority = 5)
+        {
+            var locs = string.Join(",", places);
+            var result = QueueTask("Wander", queue, priority, $"{{\"locations\":[{locs}]}}");
+            result.Wait();
+            return result.Result;
+        }
+
         public async void CancelTask(string id)
         {
+            // TODO: on given queue?!
             var client = new HttpClient() { BaseAddress = rocUri };
             client.DefaultRequestHeaders.Add("X-API-TOKEN", apiToken);
             var response = await client.DeleteAsync($"{apiBase}/tasks/{id}");
@@ -69,39 +79,40 @@ namespace I.Do.Relay
 
         public string GetApi(string api)
         {
-            var result = GetApiAsync("tasks");
+            var result = GetApiAsync(api);
             result.Wait();
             return result.Result;
         }
 
-        public string GetAllPlaces() // TODO: higher-level than JObject
+        /* NOT USED public string GetAllPlaces() // TODO: higher-level than JObject
         {
             return GetApi("places");
-        }
+        }*/
 
-        public string GetPlaces(string id) // TODO: higher-level than JObject
+        /* NOT USED public string GetPlaces(string id) // TODO: higher-level than JObject
         {
             return GetApi($"places/:{id}");
-        }
+        }*/
 
-        public string GetAllRobots() // TODO: higher-level than JObject
+        /* NOT USED public string GetAllRobots() // TODO: higher-level than JObject
         {
             return GetApi("robots");
-        }
+        }*/
 
-        public string GetRobot(string id) // TODO: higher-level than JObject
+        /* NOT USED public string GetRobot(string id) // TODO: higher-level than JObject
         {
             return GetApi($"robots/:{id}");
-        }
+        }*/
 
         public string GetAllTasks() // TODO: higher-level than JObject
         {
+            // TODO: on given queue?!
             return GetApi("tasks");
         }
 
-        public string GetTask(string id) // TODO: higher-level than JObject
+        /* NOT USED public string GetTask(string id) // TODO: higher-level than JObject
         {
             return GetApi($"tasks/:{id}");
-        }
+        }*/
     }
 }
