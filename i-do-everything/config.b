@@ -14,7 +14,7 @@ config "azureCognitiveKey" "9fe288f421a94b2dbe48181a62b6c216"
 config "azureCognitiveUri" "https://westcentralus.api.cognitive.microsoft.com"
 
 config "faceDirectory" "../../../faces"
-config "faceConfidenceThreshold" 0.5
+config "faceConfidenceThreshold" 0.6
 config "faceRepeatSeconds" 30
 
 config "faceGreeting.default" [say "Hi {0}"]

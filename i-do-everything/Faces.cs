@@ -165,7 +165,7 @@ namespace I.Do.Faces
                     }
                 }
             }
-            File.WriteAllText($"{peopleDirectory}/people.json", people.ToString());
+            File.WriteAllText($"../../people.json", people.ToString());
             // */
 
             // train face reco
@@ -192,7 +192,7 @@ namespace I.Do.Faces
         private async Task TestFaceReco(string groupId, string peoplePath)
         {
             THROTTLE = 0; // disable throttling
-            var people = JObject.Parse(File.ReadAllText($"{peopleDirectory}/people.json"));
+            var people = JObject.Parse(File.ReadAllText($"../../people.json"));
             foreach (var p in Directory.GetFiles(peoplePath))
             {
                 var image = File.ReadAllBytes(p);
@@ -247,7 +247,7 @@ namespace I.Do.Faces
         private async Task<IEnumerable<string>> RecoFacesAsync(byte[] image, bool debug)
         {
             THROTTLE = 0; // disable throttling
-            var people = JObject.Parse(File.ReadAllText($"{peopleDirectory}/people.json"));
+            var people = JObject.Parse(File.ReadAllText($"../../people.json"));
             var faces = new List<string>();
             try
             {
