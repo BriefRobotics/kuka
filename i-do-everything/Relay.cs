@@ -19,7 +19,7 @@ namespace I.Do.Relay
             this.apiToken = apiToken;
         }
 
-        public async Task<string> QueueTask(string program, string queue = "api", int priority = 5, string args = null)
+        public async Task<string> QueueTask(string program, string queue, int priority = 5, string args = null)
         {
             var client = new HttpClient() { BaseAddress = rocUri };
             client.DefaultRequestHeaders.Add("X-API-TOKEN", apiToken);
@@ -59,7 +59,6 @@ namespace I.Do.Relay
 
         public async void CancelTask(string id)
         {
-            // TODO: on given queue?!
             var client = new HttpClient() { BaseAddress = rocUri };
             client.DefaultRequestHeaders.Add("X-API-TOKEN", apiToken);
             var response = await client.DeleteAsync($"{apiBase}/tasks/{id}");

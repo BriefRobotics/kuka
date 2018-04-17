@@ -61,14 +61,17 @@
             relay.QueueWander(places, queue);
         }
 
-        private static void Stop()
+        private static void Stop(string queue)
         {
             Console.WriteLine($"Stopping");
             var tasks = JArray.Parse(relay.GetAllTasks());
             foreach (var t in tasks)
             {
-                var id = t["_id"].Value<string>();
-                relay.CancelTask(id);
+                if (t["queue_id"].Value<string>() == queue)
+                {
+                    var id = t["_id"].Value<string>();
+                    relay.CancelTask(id);
+                }
             }
         }
 
@@ -188,8 +191,8 @@
             machine.Context.AddWord10("faces-reco", "Recognize faces in given image file (`faces-reco \"test.jpg\"`)", f => faces.RecoFaces((string)f, true));
             machine.Context.AddWord20("faces-watch", "Begin watching given directory and children for face images [debug mode optional] (`faces-watch \"c:/test\"` true)", (dir, debug) => WatchFaces(dir, debug, machine));
             machine.Context.AddWord10("nav", "Send relay to given place (`nav \"booth\"`)", p => Goto(p, config["relayQueue"]));
-            machine.Context.AddWord10("tour", "Send relay to given places (`tour [\"booth\",\"foo\",\"bar\"]`)", p => Wander(((IEnumerable<Word>)p).Reverse().Select(n => n.ToString()), config["relayQueue"]));
-            machine.Context.AddWord00("stop", "Stop relay by canceling previous task (`stop`)", () => Stop());
+            machine.Context.AddWord10("tour", "Send relay to given places (`tour [\"booth\",\"foo\",\"bar\"]`)", p => Wander(((IEnumerable<Word>)p).Reverse().Select(n => n.ToString()), config["relayQueueId"]));
+            machine.Context.AddWord00("stop", "Stop relay by canceling previous task (`stop`)", () => Stop(config["relayQueueId"]));
         }
 
         public static void Main(string[] args)

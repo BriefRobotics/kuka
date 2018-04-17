@@ -2,7 +2,6 @@
 
 config "relayRocUri" "https://kuka.savioke.com"
 config "relayApiToken" "DTzDXcoLEycTgihyh"
-config "relayQueue" "api"
 
 // message queues on which to receive commands
 config "amazonSqsBaseUri" "https://sqs.us-west-2.amazonaws.com/613660770529"
