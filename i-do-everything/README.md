@@ -2,6 +2,23 @@
 
 This is a classic .NET app (for speech reco/synth) hosting a Brief language engine as the "glue" integrating many things.
 
+## SQS
+
+Each robot "role" is assigned a [Simple Queue Service endpoint](https://console.aws.amazon.com/sqs/home?region=us-west-2).
+Each queue needs Send/Receive/DeleteMessage permissions.
+The base URI is specified in `config.b` and the role is in `role.b`.
+
+For example: `https://sqs.us-west-2.amazonaws.com/613660770529/occo1?Action=SendMessage&MessageBody=<brief>`
+
+## Lambdas
+
+Several Alexa skills call lambdas that essentially push Brief messages to the SQS queues.
+Each share `AlexaSkill.js`, but have individual `index.js`
+
+## Skills
+
+The [Alexa Skills](https://developer.amazon.com/alexa/console/ask) each have language models in `model.json` files and individual `index.js` that respond to intents.
+
 ## Brief Words
 
 Type `words` at the REPL for a complete list, but here are some important i-do words:

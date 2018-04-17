@@ -64,6 +64,8 @@
     <Compile Include="Windows.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Alexa\AlexaSkill.js" />
+    <Content Include="Alexa\Everything\index.js" />
     <Content Include="i-do.b">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -76,6 +78,7 @@
     <Content Include="role.b">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Alexa\Everything\model.json" />
     <None Include="packages.config" />
     <Content Include="people.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -83,6 +86,10 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Alexa\Coffee\" />
+    <Folder Include="Alexa\Occo\" />
+    <Folder Include="Alexa\Purifier\" />
+    <Folder Include="Alexa\Wellness\" />
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>

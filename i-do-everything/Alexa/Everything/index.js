@@ -1,4 +1,4 @@
-var APP_ID = "amzn1.ask.skill.40a8153d-fb60-41d4-9f71-0c82a7636524";
+var APP_ID = "amzn1.ask.skill.b4a11c2a-4bb1-4d86-b105-f715ed8dac79";
 
 var AlexaSkill = require('./AlexaSkill');
 
@@ -58,6 +58,18 @@ Kuka.prototype.intentHandlers = {
     },
     "occo": function (event, context, response) {
         send('occo', "Bringing oak-oh to take photos!", response);
+    },
+    "stop": function (event, context, response) {
+        send('stop', "Stopping!", response);
+    },
+    "AMAZON.StopIntent": function (event, content, response) {
+        send('stop', "Stopping!", response);
+    },
+    "AMAZON.CancelIntent": function (event, content, response) {
+        send('stop', "Stopping!", response);
+    },
+    "AMAZON.HelpIntent": function (event, content, response) {
+        response.tellWithCard("You can say things such as, 'Bring me coffee', 'Bring the oak-oh to take photos', 'Bring the air purifier' and 'Bring the wellness module'.", "Kuka", "Help");
     },
 };
 
