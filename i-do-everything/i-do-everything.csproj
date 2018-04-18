@@ -87,6 +87,9 @@
     <None Include="Alexa\Occo\model.json" />
     <None Include="Alexa\Purifier\model.json" />
     <None Include="Alexa\Wellness\model.json" />
+    <Content Include="ashley.b">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
     <Content Include="people.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
