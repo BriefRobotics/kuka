@@ -102,6 +102,7 @@
             });
             queue.Start();
             Console.WriteLine($"Role: {role} ({uri})");
+            Console.WriteLine($"Relay: {config["relay"]}");
         }
 
         #endregion queue
