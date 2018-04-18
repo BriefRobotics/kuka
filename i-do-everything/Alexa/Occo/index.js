@@ -16,7 +16,7 @@ Kuka.prototype.intentHandlers = {
         }
         else
         {
-            response.tell("I don't know where " + place + " is.", "Unknown Location");
+            response.tell("I can't find that on my map.", "Unknown Location");
         }
     },
     "summon": function (event, context, response) {
