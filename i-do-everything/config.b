@@ -18,9 +18,12 @@ config "faceConfidenceThreshold" 0.6
 config "faceRepeatSeconds" 30
 
 config "faceGreeting.default" [say "Hi {0}"]
-config "faceGreeting.ashley" [say "Hello Ashley, you freaking wacko!"]
-config "faceGreeting.greg" [say "Hey Greg! You sir, are a nut!"]
-config "faceGreeting.dominik" [say "Hey Dominik! You're promoted!"]
+config "faceGreeting.ashley" [say "Hello Ashley, you are a genius!"]
+config "faceGreeting.greg" [say "Hey Greg! Nice seeing you at the show!"]
+config "faceGreeting.dominik" [say "Hey Dominik! Hope you are having a good day!"]
 config "faceGreeting.bernd" [say "Good morning Bernd! Nice to see you!"]
-config "faceGreeting.tracey" [say "Hi there Tracey, you cutie!"]
-config "faceGreeting.nathan" [say "Hey there Mr. Nathan! Glad you finally made it here. Long trip from Redmond to Iceland to Germany, eh?"]
+config "faceGreeting.andy" [say "KneeHow, Andy, great to see you!"]
+config "faceGreeting.peter" [say "Hello mr. Mohen, nice to see you!"]
+config "faceGreeting.enrique" [say "Hello mr. President. Its an honor to see you!"]
+config "faceGreeting.till" [say "Hi boss!"]
+config "faceGreeting.angela" [say "Hello mrs. Merkel, hope you like the cooka booth!"]
