@@ -12,7 +12,7 @@ Kuka.prototype.intentHandlers = {
         var place = event.request.intent.slots.place.value;
         if (place)
         {
-            response. send('occo1', 'goto "' + place +'"', "Going to " + place, response);
+            response. send('occo0', 'goto "' + place +'"', "Going to " + place, response);
         }
         else
         {
@@ -20,7 +20,7 @@ Kuka.prototype.intentHandlers = {
         }
     },
     "summon": function (event, context, response) {
-        response.send('occo1', 'occo', "Bringing oak-oh to take photos!", response);
+        response.send('occo0', 'occo', "Bringing oak-oh to take photos!", response);
     },
     "AMAZON.HelpIntent": function (event, content, response) {
         response.tell("You can say things such as, 'Come take my photo'.", "Kuka", "Help");

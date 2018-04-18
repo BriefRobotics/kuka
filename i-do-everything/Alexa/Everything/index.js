@@ -9,16 +9,16 @@ Kuka.prototype.constructor = Kuka;
 
 Kuka.prototype.intentHandlers = {
     "coffee": function (event, context, response) {
-        response.send('occo1', 'coffee', "Coming with coffee!", response);
+        response.send('coffee0', 'coffee', "Coming with coffee!", response);
     },
     "occo": function (event, context, response) {
-        response.send('occo1', 'occo', "Bringing oak-oh to take photos!", response);
+        response.send('occo0', 'occo', "Bringing oak-oh to take photos!", response);
     },
     "purifier": function (event, context, response) {
-        response.send('occo1', 'purifier', "Coming with the air purifier!", response);
+        response.send('purifier0', 'purifier', "Coming with the air purifier!", response);
     },
     "wellness": function (event, context, response) {
-        response.send('occo1', 'wellness', "Bringing the wellness module!", response);
+        response.send('wellness0', 'wellness', "Bringing the wellness module!", response);
     },
     "AMAZON.HelpIntent": function (event, content, response) {
         response.tell("You can say things such as, 'Bring me coffee', 'Bring the oak-oh to take photos', 'Bring the air purifier' and 'Bring the wellness module'.", "Kuka", "Help");
