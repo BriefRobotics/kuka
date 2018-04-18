@@ -11,4 +11,4 @@ def 'wellness [say "Delivering the wellness module" goto "echo"]
 def 'find [wander ["beanbag" "corner" "charger"] say]
 
 // uncomment this for voice control
-load 'voice.b
+// load 'voice.b
