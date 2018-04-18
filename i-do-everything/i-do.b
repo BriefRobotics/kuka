@@ -1,7 +1,4 @@
-﻿// phrase "Will you marry me?" [say "I do."]
-// speechreco
-
-faces-watch "C:/OCCO/LiveStreams" true
+﻿faces-watch "C:/OCCO/LiveStreams" true
 
 def 'goto [nav stop]
 def 'wander [tour stop]
@@ -12,3 +9,6 @@ def 'purifier [say "Delivering the air purifier" goto "echo"]
 def 'wellness [say "Delivering the wellness module" goto "echo"]
 
 def 'find [wander ["beanbag" "corner" "charger"] say]
+
+// uncomment this for voice control
+load 'voice.b

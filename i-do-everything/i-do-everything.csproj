@@ -90,6 +90,9 @@
     <Content Include="ashley.b">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="voice.b">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
     <Content Include="people.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
