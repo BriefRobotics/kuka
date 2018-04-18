@@ -10,8 +10,8 @@
                 {
                     "name": "AMAZON.HelpIntent",
                     "samples": [
-                      "What can I say",
-                      "What I can say"
+                        "What can I say",
+                        "What I can say"
                     ]
                 },
                 {
@@ -70,9 +70,44 @@
                         "Send the wellness module to me",
                         "Send the wellness module"
                     ]
-                }
+                },
+              {
+                "name": "find",
+                "slots": [
+                  {
+                    "name": "thing",
+                    "type": "thing"
+                  }
+                ],
+                "samples": [
+                  "Try to find {thing}",
+                  "Go find {thing}",
+                  "Find {thing}"
+                ]
+              }
             ],
-            "types": []
+            "types": [
+                {
+                    "name": "thing",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "Greg"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Dominik"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Till"
+                            }
+                        }
+                    ]
+                }
+            ]
         }
     }
 }

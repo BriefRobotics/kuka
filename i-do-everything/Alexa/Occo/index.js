@@ -19,6 +19,15 @@ Kuka.prototype.intentHandlers = {
             response.tell("I can't find that on my map.", "Unknown Location");
         }
     },
+    "find": function (event, context, response) {
+        var thing = event.request.intent.slots.thing.value;
+        if (thing) {
+            response.send('occo0', 'find "Looking for ' + thing + '"', "Looking for " + thing, response);
+        }
+        else {
+            response.tell("I don't recognize that.", "Unknown Thing");
+        }
+    },
     "summon": function (event, context, response) {
         response.send('occo0', 'occo', "Bringing oak-oh to take photos!", response);
     },

@@ -1,3 +1,3 @@
-﻿config "role" "dev1"
-config "relayQueueId" "n5PY8ywGxgFocgdnb"
-config "relayQueueName" "gerry"
+﻿config "role" "occo0"
+config "relayQueueId" "38zD756iDHx9BxqNJ"
+config "relayQueueName" "api"

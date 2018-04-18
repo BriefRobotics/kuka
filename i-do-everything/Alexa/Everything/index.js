@@ -20,6 +20,15 @@ Kuka.prototype.intentHandlers = {
     "wellness": function (event, context, response) {
         response.send('wellness0', 'wellness', "Bringing the wellness module!", response);
     },
+    "find": function (event, context, response) {
+        var thing = event.request.intent.slots.thing.value;
+        if (thing) {
+            response.send('occo0', 'find "Looking for ' + thing + '"', "Looking for " + thing, response);
+        }
+        else {
+            response.tell("I don't recognize that.", "Unknown Thing");
+        }
+    },
     "AMAZON.HelpIntent": function (event, content, response) {
         response.tell("You can say things such as, 'Bring me coffee', 'Bring the oak-oh to take photos', 'Bring the air purifier' and 'Bring the wellness module'.", "Kuka", "Help");
     },
