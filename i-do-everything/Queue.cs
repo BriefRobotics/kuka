@@ -56,7 +56,14 @@ namespace I.Do.Queue
                                 }
                                 finally
                                 {
-                                    client.DeleteMessage(uri, m.ReceiptHandle);
+                                    try
+                                    {
+                                        client.DeleteMessage(uri, m.ReceiptHandle);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Console.WriteLine($"ERROR: {ex.Message}");
+                                    }
                                 }
                             }
                         }
