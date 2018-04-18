@@ -33,21 +33,38 @@ namespace I.Do.Queue
             var draining = true; // ignore messages from before startup
             while (true)
             {
-                var resp = client.ReceiveMessage(uri);
-                if (resp.Messages.Count == 0)
+                try
                 {
-                    draining = false;
-                }
-                else
-                {
-                    foreach (var m in resp.Messages)
+                    var resp = client.ReceiveMessage(uri);
+                    if (resp.Messages.Count == 0)
                     {
-                        if (!draining) // ignore messages sent while app closed
-                        {
-                            callback(m.Body);
-                        }
-                        client.DeleteMessage(uri, m.ReceiptHandle);
+                        draining = false;
                     }
+                    else
+                    {
+                        foreach (var m in resp.Messages)
+                        {
+                            if (!draining) // ignore messages sent while app closed
+                            {
+                                try
+                                {
+                                    callback(m.Body);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine($"ERROR: {ex.Message}");
+                                }
+                                finally
+                                {
+                                    client.DeleteMessage(uri, m.ReceiptHandle);
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"ERROR: {ex.Message}");
                 }
             }
         }
