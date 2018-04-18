@@ -1,4 +1,4 @@
-var APP_ID = "amzn1.ask.skill.4b598ee3-29fb-40f6-9052-d637ab033f7f";
+var APP_ID = "amzn1.ask.skill.0e21a07f-3104-4c71-8b1a-0948ee649004";
 
 var AlexaSkill = require('./AlexaSkill');
 

@@ -1,7 +1,7 @@
 {
     "interactionModel": {
         "languageModel": {
-            "invocationName": "the wellness module",
+            "invocationName": "wellness",
             "intents": [
                 {
                     "name": "AMAZON.CancelIntent",
