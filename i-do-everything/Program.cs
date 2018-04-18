@@ -57,7 +57,7 @@
 
         private static void Wander(IEnumerable<string> places, string queue)
         {
-            Console.WriteLine($"Going to {string.Join(", ", places)}");
+            Console.WriteLine($"Wandering between {string.Join(" ", places)}");
             relay.QueueWander(places, queue);
         }
 
