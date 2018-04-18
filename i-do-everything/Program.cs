@@ -61,7 +61,7 @@
             relay.QueueWander(places, queue);
         }
 
-        private static void Stop(string queue)
+        private static void Stop(string queue, bool firstOnly)
         {
             Console.WriteLine($"Stopping");
             var tasks = JArray.Parse(relay.GetAllTasks());
@@ -71,6 +71,7 @@
                 {
                     var id = t["_id"].Value<string>();
                     relay.CancelTask(id);
+                    if (firstOnly) return;
                 }
             }
         }
@@ -193,7 +194,8 @@
             machine.Context.AddWord20("faces-watch", "Begin watching given directory and children for face images [debug mode optional] (`faces-watch \"c:/test\"` true)", (dir, debug) => WatchFaces(dir, debug, machine));
             machine.Context.AddWord10("nav", "Send relay to given place (`nav \"booth\"`)", p => Goto(p, config["relayQueueName"]));
             machine.Context.AddWord10("tour", "Send relay to given places (`tour [\"booth\",\"foo\",\"bar\"]`)", p => Wander(((IEnumerable<Word>)p).Reverse().Select(n => n.ToString()), config["relayQueueName"]));
-            machine.Context.AddWord00("stop", "Stop relay by canceling previous task (`stop`)", () => Stop(config["relayQueueId"]));
+            machine.Context.AddWord00("stop", "Stop relay by canceling previous task (`stop`)", () => Stop(config["relayQueueId"], false));
+            machine.Context.AddWord00("cancel", "Cancel current task (`cancel`)", () => Stop(config["relayQueueId"], true));
         }
 
         public static void Main(string[] args)

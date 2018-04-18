@@ -33,15 +33,6 @@ namespace I.Do.Relay
             return await response.Content.ReadAsStringAsync();
         }
 
-        /* unused public string QueueDelivery(string args, string queue = "api", int priority = 5)
-        {
-            // for args, see http://docs.savioke.com/api-dev/#api-Tasks-NewDelivery
-            // TODO: higher-level than JObject
-            var result = QueueTask("Delivery", queue, priority, args);
-            result.Wait();
-            return result.Result;
-        } */
-
         public string QueueGoto(string place, string queue, string message = "Hello!", int priority = 5)
         {
             var result = QueueTask("Goto", queue, priority, $"{{\"location\":\"{place}\",\"timeout\":1}}");
@@ -83,6 +74,21 @@ namespace I.Do.Relay
             return result.Result;
         }
 
+        public string GetAllTasks() // TODO: higher-level than JObject
+        {
+            // TODO: on given queue?!
+            return GetApi("tasks");
+        }
+
+        /* NOT USED public string QueueDelivery(string args, string queue = "api", int priority = 5)
+        {
+            // for args, see http://docs.savioke.com/api-dev/#api-Tasks-NewDelivery
+            // TODO: higher-level than JObject
+            var result = QueueTask("Delivery", queue, priority, args);
+            result.Wait();
+            return result.Result;
+        } */
+
         /* NOT USED public string GetAllPlaces() // TODO: higher-level than JObject
         {
             return GetApi("places");
@@ -102,12 +108,6 @@ namespace I.Do.Relay
         {
             return GetApi($"robots/:{id}");
         }*/
-
-        public string GetAllTasks() // TODO: higher-level than JObject
-        {
-            // TODO: on given queue?!
-            return GetApi("tasks");
-        }
 
         /* NOT USED public string GetTask(string id) // TODO: higher-level than JObject
         {
