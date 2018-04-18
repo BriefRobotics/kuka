@@ -1,7 +1,7 @@
 {
     "interactionModel": {
         "languageModel": {
-            "invocationName": "occo robot",
+            "invocationName": "occo camera",
             "intents": [
                 {
                     "name": "AMAZON.CancelIntent",
