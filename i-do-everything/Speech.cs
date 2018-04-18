@@ -14,19 +14,33 @@ namespace I.Do.Speech
 
         public void SetGrammar(GrammarBuilder grammar)
         {
-            var d = new GrammarBuilder();
-            d.AppendDictation();
-            var g = new Grammar(new Choices(grammar, d));
-            reco.SetInputToDefaultAudioDevice();
-            reco.UnloadAllGrammars();
-            reco.LoadGrammar(new Grammar(grammar));
-            reco.RecognizeAsync(RecognizeMode.Multiple);
-            reco.SpeechRecognized += (_, e) => Recognized?.Invoke(this, e.Result);
+            try
+            {
+                var d = new GrammarBuilder();
+                d.AppendDictation();
+                var g = new Grammar(new Choices(grammar, d));
+                reco.SetInputToDefaultAudioDevice();
+                reco.UnloadAllGrammars();
+                reco.LoadGrammar(new Grammar(grammar));
+                reco.RecognizeAsync(RecognizeMode.Multiple);
+                reco.SpeechRecognized += (_, e) => Recognized?.Invoke(this, e.Result);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ERROR: {ex.Message}");
+            }
         }
 
         public Speech()
         {
-            synth.SelectVoiceByHints(VoiceGender.Female);
+            try
+            {
+                synth.SelectVoiceByHints(VoiceGender.Female);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ERROR: {ex.Message}");
+            }
         }
 
         public Speech(GrammarBuilder grammar)
@@ -63,9 +77,16 @@ namespace I.Do.Speech
 
         public void Say(string say)
         {
-            reco.RecognizeAsyncStop(); // poor man's echo cancelation
-            synth.Speak(say);
-            if (reco.Grammars.Count > 0) reco.RecognizeAsync(RecognizeMode.Multiple);
+            try
+            {
+                reco.RecognizeAsyncStop(); // poor man's echo cancelation
+                synth.Speak(say);
+                if (reco.Grammars.Count > 0) reco.RecognizeAsync(RecognizeMode.Multiple);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ERROR: {ex.Message}");
+            }
         }
     }
 }
